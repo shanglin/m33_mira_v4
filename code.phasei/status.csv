@@ -1,0 +1,49 @@
+field,bad.reg,allframe,get lc,match to massey,Note,Sig-mag relation,Mag-off w/ massey's I,cmb_lc (w/ bad obs removed)
+x1i,y,y,y,y,,y,y,y
+x2i,y,y,y,y,,y,y,y
+x3i,y,y,y,y,,y,y,y
+x4i,y,y,y,y,,y,y,y
+,,,,,,,, 
+y1i,y,y,y,y,Delete 1 frame,y,y,y
+y2i,y,y,y,y,Delete 3 frames,y,y,y
+y3i,y,y,y,y,Delete 2 frames,y,y,y
+y4i,y,y,y,y,,y,y,y
+,,,,,,,,
+zai,y,y,y,y,,y,y,y
+zbi,y,y,y,y,Delete 1 frame,y,y,y
+zci,y,y,y,y,,y,y,y
+,,,,,,,,
+,,,,,,,,
+,,,,,remove all the frames with high coe>0.5,,,
+,als done?,allframe,get lc,match to massey,or frames of bad pointings,,,
+w0i,y,y,y,y,0,y,y,y
+w1i,y,y,y,y,-2,y,y,y
+w2i,y,y,y,y,-3,y,y,y
+w3i,y,y,y,y,-4,y,y,y
+w4i,y,y,y,y,-2,y,y,y
+w5i,y,y,y,y,-1,y,y,y
+w6i,y,y,y,y,-2,y,y,y
+w7i,y,y,y,y,-n,y,y,y
+w8i,y,y,y,y,-1,y,y,y
+w9i,y,y,y,y,-2,y,y,y
+wai,y,y,y,y,-4,y,y,y
+wbi,y,y,y,y,-n,y,y,y
+wci,y,y,y,y,-7,y,y,y
+wdi,y,y,y,y,-n,y,y,y
+wei,y,y,y,y,-n,y,y,y
+wfi,y,y,y,y,-n,y,y,y
+wgi,y,y,y,y,-n,y,y,y
+whi,y,y,y,y,-n,y,y,y
+wii,y,y,y,y,-n,y,y,y
+wji,y,y,y,y,-n,y,y,y
+wki,y,y,y,y,-n,y,y,y
+wli,y,y,y,y,-n,y,y,y
+wmi,y,y,y,y,-n,y,y,y
+wni,y,y,y,y,-n,y,y,y
+woi,y,y,y,y,-n,y,y,y
+wpi,y,y,y,y,-n,y,y,y
+wqi,y,y,y,y,-n,y,y,y
+wri,y,y,y,y,-n,y,y,y
+wsi,y,y,y,y,-n,y,y,y
+wti,y,y,y,y,split from field wsi,y,y,y
+wui,y,y,y,y,split from field wbi,y,y,y
