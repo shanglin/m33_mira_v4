@@ -79,16 +79,21 @@ while (i.sim < n.sim) {
             sig.a = sig[sig.idx, 2]
             sig.b = sig[sig.idx, 3]
             sig.c = sig[sig.idx, 4]
+            sig.c = max(sig.c, 0.00001)
             flc[i,3] = round(sig.a^(mag - sig.b) + sig.c, 3)
             flc[i,2] = round(rnorm(1, mean = mag, sd = flc[i,3]), 3)
         }
         flc = flc[order(flc[,1]),]
-        f.flc = paste0(dir,type,'_',sLMCID,'_',M33ID,'_',round(random.shift,2),'.flc')
-        write.table(flc, f.flc, row.names = F, col.names = F, sep = '  ')
-        i.sim = i.sim + 1
-        msg = paste0('    >> ',round(i.sim * 100 / n.sim, 3),' %      \r')
-        message(msg, appendLF = F)
 
+        cflc = flc[flc[,3]<3,]
+        if ((nrow(flc) - nrow(cflc)) < 3) {
+            f.flc = paste0(dir,type,'_',sLMCID,'_',M33ID,'_',round(random.shift,2),'.flc')
+            write.table(cflc, f.flc, row.names = F, col.names = F, sep = '  ')
+            i.sim = i.sim + 1
+            msg = paste0('    >> ',round(i.sim * 100 / n.sim, 3),' %      \r')
+            message(msg, appendLF = F)
+        }
+        
         if (F) {
             f.eps = paste0(fig.dir,type,'_',sLMCID,'_',M33ID,'_',round(random.shift,2),'.eps')
             setEPS()

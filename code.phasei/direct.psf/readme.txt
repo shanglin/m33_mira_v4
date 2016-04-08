@@ -8,4 +8,4 @@ Light curves improved a lot but still some bad ones.
 
 3. direct.allframe.phot.r
 Use ii6308.fits as master. Determined PSF for individule images. Use 3-sigma ALLSTAR results to match frames. Set FI = 2 for DAOPHOT & ALLSTAR. This setting would take longer time than (1) and (2).
-Success! Very look light curves.
+Success! Very good light curves.
