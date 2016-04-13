@@ -1,5 +1,5 @@
 all:
-	g++ gpmodelv2.cpp -o gpmodelv2 -Wall -O2 -std=c++11 -I ../cpp_version/include -lopenblas -llapack
+	g++ gpmodelv2.8.cpp -o gpmodel -Wall -O2 -std=c++11 -I ./include -lopenblas -llapack
 
 clean:
-	rm -f gpmodelv2
+	rm -f gpmodel

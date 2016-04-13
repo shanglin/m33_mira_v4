@@ -707,7 +707,8 @@ int main(int argc, char* argv[ ]) {
 	  f_output = output_dir + "/" + f_lc_trim + output_extension;
 	  lc.spc_output(f_output);
 	  gp_counter++;
-	  string f_status = f_list + ".v2status.txt";
+	  string f_status = "status/" + f_list + ".status.txt";
+	  f_status.replace(f_status.begin()+7,f_status.begin()+12,"");
 	  ofstream out_status(f_status);
 	  out_status << gp_counter << "   " << f_lc_trim << "\n";
 	  out_status.close();
