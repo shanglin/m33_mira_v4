@@ -1,11 +1,12 @@
 set.seed(101)
 
-outdir = '~/Work/m33_phaseII/rf_model/'
+outdir = '~/Work/m33_phaseII/rf_model_nb/'
 figdir = paste0(outdir, 'figs/')
+system(paste0('mkdir -p ',figdir))
 
 if (T) {
 library(randomForest)
-f.ftr = paste0(outdir, 'mnm_features.dat')
+f.ftr = paste0(outdir, 'nb_features.dat')
 ftr = read.table(f.ftr, header=T)
 ftr[,1] = as.character(ftr[,1])
 n.ftr = nrow(ftr)
@@ -43,7 +44,7 @@ for (i.fold in 1:n.fold) {
     test.idx = (cut.pos[i.fold]+1):cut.pos[i.fold+1]
     test.set = sim[test.idx,]
     train.set = sim[-test.idx,]
-    rf.model = randomForest(sim.class ~ . - ID - t.test - F.true,
+    rf.model = randomForest(sim.class ~ . - ID - F.true - i.mag,
         data = train.set, importance=T, ntree=ntree, do.trace=T)
     pred.test = predict(rf.model, test.set, type='prob')
     pred.data = cbind(test.set, pred.test)
@@ -54,6 +55,15 @@ for (i.fold in 1:n.fold) {
     }
     ## plot(rf.model)
 }
+
+f.out = paste0(outdir,'cross_validation.dat')
+ts = '                    ID                F.true    F.peak     Q.peak  Q.base dQ.p1.base dQ.p1.p2      theta.1   log10.theta.2   A.model  A.lc   A.lc.9 n.obs sd.error sig.a   sig.b   i.mag   lc.mag   mean.sd qdr.rsd.sd ratio.q2m  N_prob   Y_prob'
+write(ts, f.out)
+fmt = '%35s%11.6f%10.6f%10.3f%9.3f%9.3f%8.3f%15.5f%16.5f%8.3f%8.3f%8.3f%5i%8.3f%8.3f%8.3f%9.3f%9.3f%8.3f%9.3f%10.3f%10.3f%10.3f'
+out2 = out[,-c(22)]
+out2 = do.call('sprintf', c(fmt, out2))
+write(out2, f.out, append=T)
+
 
 true.cls = out[,'sim.class']
 pred.cls = rep(0, nrow(out))
@@ -90,11 +100,12 @@ setEPS()
 f.eps = paste0(figdir,'rf_var_import.eps')
 postscript(f.eps, width=12, height=12*0.618)
 train.set = sim
-rf.model = randomForest(sim.class ~ . - ID - t.test - F.true,
+rf.model = randomForest(sim.class ~ . - ID - F.true - i.mag,
     data = train.set, importance=T, ntree=ntree, do.trace=T)
 varImpPlot(rf.model)
 dev.off()
 
+print('   >> Predicting classes for all the stars')
 sim.class = rep('A', nrow(ftr))
 idx = which(substr(ftr[,1],1,4) == 'con_')
 sim.class[idx] = 'N'
@@ -104,11 +115,13 @@ idx = which(substr(ftr[,1],1,5) == 'mira_')
 sim.class[idx] = 'Y'
 adat = cbind(ftr, sim.class)
 pred = predict(rf.model, adat, type='prob')
+
+print('   >> Write the results to files')
 out = cbind(ftr, pred)
 f.out = paste0(outdir,'all_predictions.dat')
-ts = '                    ID                t.test    F.true   dQ.p1.base dQ.p1.p2      theta.1   log10.theta.2   A.lc   A.lc.9 n.obs sd.error  i.mag     bfM2S      bfS2C     bfGP2P     bfM2C     f.p1     l.p1    A.p1     f.p2     l.p2    A.p2  mean.sd qdr.rsd.sd ratio.q2m  N_prob   Y_prob'
+ts = '                    ID                F.true    F.peak     Q.peak  Q.base dQ.p1.base dQ.p1.p2      theta.1   log10.theta.2   A.model  A.lc   A.lc.9 n.obs sd.error sig.a   sig.b   i.mag   lc.mag   mean.sd qdr.rsd.sd ratio.q2m  N_prob   Y_prob'
 write(ts, f.out)
-fmt = '%35s%9.3f%11.6f%11.3f%9.3f%15.5f%16.5f%8.3f%8.3f%5i%8.3f%9.3f%11.4f%10.4f%11.4f%10.4f%10.6f%8.4f%8.3f%10.6f%8.4f%8.3f%8.3f%9.3f%10.3f%10.4f%10.4f'
+fmt = '%35s%11.6f%10.6f%10.3f%9.3f%9.3f%8.3f%15.5f%16.5f%8.3f%8.3f%8.3f%5i%8.3f%8.3f%8.3f%9.3f%9.3f%8.3f%9.3f%10.3f%10.3f%10.3f'
 out2 = do.call('sprintf', c(fmt, out))
 write(out2, f.out, append=T)
 
@@ -119,8 +132,8 @@ write.table(round(importance(rf.model),4), f.imp, quote=F, sep='   ')
 idx = sim.class == 'A'
 m33 = out[idx,]
 f.m33 = paste0(outdir, 'm33_predictions.dat')
-ts = '                    ID                t.test    F.true   dQ.p1.base dQ.p1.p2      theta.1   log10.theta.2   A.lc   A.lc.9 n.obs sd.error  i.mag     bfM2S      bfS2C     bfGP2P     bfM2C     f.p1     l.p1    A.p1     f.p2     l.p2    A.p2  mean.sd qdr.rsd.sd ratio.q2m  N_prob   Y_prob'
+ts = '                    ID                F.true    F.peak     Q.peak  Q.base dQ.p1.base dQ.p1.p2      theta.1   log10.theta.2   A.model  A.lc   A.lc.9 n.obs sd.error sig.a   sig.b   i.mag   lc.mag   mean.sd qdr.rsd.sd ratio.q2m  N_prob   Y_prob'
 write(ts, f.m33)
-fmt = '%35s%9.3f%11.6f%11.3f%9.3f%15.5f%16.5f%8.3f%8.3f%5i%8.3f%9.3f%11.4f%10.4f%11.4f%10.4f%10.6f%8.4f%8.3f%10.6f%8.4f%8.3f%8.3f%9.3f%10.3f%10.4f%10.4f'
+fmt = '%35s%11.6f%10.6f%10.3f%9.3f%9.3f%8.3f%15.5f%16.5f%8.3f%8.3f%8.3f%5i%8.3f%8.3f%8.3f%9.3f%9.3f%8.3f%9.3f%10.3f%10.3f%10.3f'
 m332 = do.call('sprintf', c(fmt, m33))
 write(m332, f.m33, append=T)

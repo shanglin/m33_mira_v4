@@ -66,3 +66,10 @@ fmt = '%35s%9.3f%11.6f%11.3f%9.3f%15.5f%16.5f%8.3f%8.3f%5i%8.3f%9.3f%11.4f%10.4f
 out = do.call('sprintf', c(fmt, ftr))
 write(out, f.ftr, append=T)
 
+
+df = 0.00027
+idx = substr(ftr[,1],1,4) == 'mira'
+dat = ftr[idx,]
+idx = abs(dat[,3]-dat[,17]) < df
+a = sum(idx) / nrow(dat)
+print(a)

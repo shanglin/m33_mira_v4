@@ -1,6 +1,6 @@
 set.seed(101)
 
-outdir = '~/Work/m33_phaseII/rf_model/'
+outdir = '~/Work/m33_phaseII/rf_model_nc/'
 figdir = paste0(outdir, 'figs/')
 
 if (T) {
@@ -38,13 +38,20 @@ cut.pos[n.fold] = n.sim
 cut.pos = c(0, cut.pos)
 
 ntree = 200
+ncore = 5
+library(doParallel)
+cl = makeCluster(ncore)
+registerDoParallel(cl)
 for (i.fold in 1:n.fold) {
     print(paste('  RF for fold',i.fold))
     test.idx = (cut.pos[i.fold]+1):cut.pos[i.fold+1]
     test.set = sim[test.idx,]
     train.set = sim[-test.idx,]
-    rf.model = randomForest(sim.class ~ . - ID - t.test - F.true,
-        data = train.set, importance=T, ntree=ntree, do.trace=T)
+    rf.model = foreach(sub_ntree = rep(round(ntree/ncore), ncore), .combine=combine, .multicombine=TRUE,
+        .packages='randomForest') %dopar% {
+            randomForest(sim.class ~ . - ID - t.test - F.true,
+                         data = train.set, importance=T, ntree=sub_ntree)
+        }
     pred.test = predict(rf.model, test.set, type='prob')
     pred.data = cbind(test.set, pred.test)
     if (i.fold == 1) {
@@ -52,7 +59,6 @@ for (i.fold in 1:n.fold) {
     } else {
         out = rbind(out, pred.data)
     }
-    ## plot(rf.model)
 }
 
 true.cls = out[,'sim.class']
@@ -90,8 +96,11 @@ setEPS()
 f.eps = paste0(figdir,'rf_var_import.eps')
 postscript(f.eps, width=12, height=12*0.618)
 train.set = sim
-rf.model = randomForest(sim.class ~ . - ID - t.test - F.true,
-    data = train.set, importance=T, ntree=ntree, do.trace=T)
+rf.model = foreach(sub_ntree = rep(round(ntree/ncore), ncore), .combine=combine, .multicombine=TRUE,
+    .packages='randomForest') %dopar% {
+        randomForest(sim.class ~ . - ID - t.test - F.true,
+                     data = train.set, importance=T, ntree=sub_ntree)
+    }
 varImpPlot(rf.model)
 dev.off()
 
@@ -112,6 +121,7 @@ fmt = '%35s%9.3f%11.6f%11.3f%9.3f%15.5f%16.5f%8.3f%8.3f%5i%8.3f%9.3f%11.4f%10.4f
 out2 = do.call('sprintf', c(fmt, out))
 write(out2, f.out, append=T)
 
+stopCluster(cl)
 
 f.imp = paste0(outdir, 'importance.dat')
 write.table(round(importance(rf.model),4), f.imp, quote=F, sep='   ')
