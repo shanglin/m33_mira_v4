@@ -60,13 +60,14 @@ mkfitfig = function(sf, f, theta.1, theta.2) {
     nf = layout(matrix(c(1,2),1,2),width=c(2,1))
     xlim = c(200, 3800)
     ylim = c(1.8,-1.8)
-    par(mar=c(3,3,1,1), mgp=c(2,1,0))
+    par(mar=c(3,3.5,1,1), mgp=c(2,1,0))
     if (abs(posterior.mean.mag - mean(lc[,2])) > 0.2) {
         new.mean.mag = mean(lc[,2])
     } else {
         new.mean.mag = posterior.mean.mag
     }
-    plot(lc[,1],lc[,2]-new.mean.mag,pch=19,cex=0.7,xlab='JD - 2450000',ylab='I + offset (mag)',xlim=xlim,ylim=ylim,main='')
+    ylab = expression(paste(Delta, italic('I'),' [mag]'))
+    plot(lc[,1],lc[,2]-new.mean.mag,pch=19,cex=0.7,xlab='JD - 2450000',ylab=ylab,xlim=xlim,ylim=ylim,main='')
     arrows(lc[,1], lc[,2]+lc[,3]-new.mean.mag, lc[,1], lc[,2]-lc[,3]-new.mean.mag, length=0, code=3, angle=90)
     lines(tpl.mjd, tpl.mag-new.mean.mag)
     text(250, - 1.5, id, adj=0)
@@ -80,7 +81,8 @@ mkfitfig = function(sf, f, theta.1, theta.2) {
     xps = c(xps, xps+1)
     mag2 = c(lc[,2],lc[,2]) - posterior.mean.mag - c(hts,hts)
     err2 = c(lc[,3],lc[,3])
-    plot(xps, mag2, pch=19, cex=0.7, xlab='Phase',ylab='p(t)', ylim=ylim, xlim=c(0,2), xaxt='n')
+    ylab = expression(paste(italic(p[t]),' [mag]'))
+    plot(xps, mag2, pch=19, cex=0.7, xlab='Phase',ylab=ylab, ylim=ylim, xlim=c(0,2), xaxt='n')
     axis(1, at=c(0,.5,1,1.5,2), labels=c('0','0.5','1','0.5','1'))
     arrows(xps, mag2+err2, xps, mag2-err2, code=3, length=0, angle=90)
     xcnt = (phase.star / (2*PI)) %% 1
@@ -92,7 +94,8 @@ mkfitfig = function(sf, f, theta.1, theta.2) {
     ycnt = c(ycnt, ycnt)
     lines(xcnt, ycnt)
     period = round(1/f,2)
-    t1 = paste0('P = ',period)
+    t1 = expression(paste(italic('P'),' = ',period, 'd'))
+    t1 = bquote(italic('P') == .(period) ~ 'd')
     text(0.1, - 1.5, t1, adj=0)
     dev.off()
 

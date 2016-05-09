@@ -8,7 +8,7 @@ bld = read.table(f.bld)
 bld = as.character(bld[,1])
 bld = paste0(bld,'.slc')
 
-f.dat = '~/Work/m33_phaseII/rf_model_nb/m33_predictions.dat'
+## f.dat = '~/Work/m33_phaseII/rf_model_nb/m33_predictions.dat'
 ## dat = read.table(f.dat, header=T)
 ## dat[,1] = as.character(dat[,1])
 ## idx = rev(order(dat[,'Y_prob']))
@@ -56,9 +56,9 @@ xlab = expression(paste(P['RF'], ' (Mira)'))
 
 f.ftr = '~/Work/m33_phaseII/rf_model_nb/nb_features.dat'
 ## ftr = read.table(f.ftr, header=T)
-## ftr[,1] = as.character(ftr[,1])
-## idx = substr(ftr[,1],1,4) == 'mira'
-## mir = ftr[idx,]
+ftr[,1] = as.character(ftr[,1])
+idx = substr(ftr[,1],1,4) == 'mira'
+mir = ftr[idx,]
 
 f.eps = paste0(figdir,'ratio_q2m_hist.eps')
 setEPS()
@@ -137,6 +137,24 @@ idx = newxy$y < 0
 newxy$y[idx] = 0
 newxy$y = newxy$y/max(newxy$y)
 lines(xx, newxy$y*1000, lwd=3, col=1)
+
+
+dev.off()
+f.sfc = paste0(outdir, 'scale_factor.dat')
+ts = '#   period      factor'
+write(ts, f.sfc)
+sfc = cbind(xx, newxy$y)
+sfc = round(sfc,5)
+write.table(sfc, f.sfc, col.names=F, row.names=F, append=T, sep='   ')
+
+f.eps = paste0(figdir,'applied_regions.eps')
+setEPS()
+postscript(f.eps, width=6, height=6)
+reg.1 = c(290, 390)
+reg.2 = c(850, 2000)
+h2 = hist(1/cad[,3], xlab='Period [day]', breaks=breaks*2, cex.lab=1.3, cex.axis=1.3, main='Applied Regions', xlim=xlim, col=col, ylab='Frequency')
+lines(reg.1,c(300,300), col=2, lwd=5)
+lines(reg.2,c(300,300), col=2, lwd=5)
 dev.off()
 
 ## test to find a good function
@@ -161,15 +179,19 @@ s.factor = newxy$y[idx]
 prob = cad[,'Y_prob']
 scaled.prob = prob * s.factor^(alpha*(1-prob))
 cad[,22] = scaled.prob
+idx = 1/cad[,3] < reg.1[1]
+cad[idx,22] = cad[idx,23]
+idx = 1/cad[,3] > reg.1[2] & 1/cad[,3] < reg.2[1]
+cad[idx,22] = cad[idx,23]
 
 breaks=50
 hist(prob,breaks=breaks/2,xlim=c(0,1),col=col,main='M33 cleaned: Original probability',cex.axis=1.3,cex.lab=1.3)
-hist(scaled.prob,breaks=breaks,col=col,main='M33 cleaned: Scaled probability',cex.axis=1.3,cex.lab=1.3)
+hist(cad[,22],breaks=breaks,col=col,main='M33 cleaned: Scaled probability',cex.axis=1.3,cex.lab=1.3,xlab='Scaled probability')
 sp.cut = c(0.5, 0.9)
 abline(v = sp.cut, col=2)
-t1 = paste0('# (Scaled Prob > ',sp.cut[1],') = ',sum(scaled.prob>sp.cut[1]))
+t1 = paste0('# (Scaled Prob > ',sp.cut[1],') = ',sum(cad[,22]>sp.cut[1]))
 text(0.01, 1000, t1, cex=1.7, adj=0)
-t2 = paste0('# (Scaled Prob > ',sp.cut[2],') = ',sum(scaled.prob>sp.cut[2]))
+t2 = paste0('# (Scaled Prob > ',sp.cut[2],') = ',sum(cad[,22]>sp.cut[2]))
 text(0.01, 800, t2, cex=1.7, adj=0)
 idx = cad[,22] > sp.cut[1]
 xlab = paste0('M33 cleaned: Periods for scaled prob > ',sp.cut[1])
