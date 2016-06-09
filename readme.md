@@ -17,7 +17,7 @@ _________________________
 - ```sc_get_spec``` applies Gaussian Process periodogram on light curves using cluster to obtain frequency spectra.
 - ```sc_ext_ftrs``` extracts some features from the spectra and light curves to aid the classification.
 - ```mira_cata_sampsize``` studies the classification results. 
-   - ```vis_inspect_source``` is piece of PHP tool designed to perform visual inspection on figures using web browser interactively. It can be used for other similar visual inspections without significant modification.
+   - ```vis_inspect_source``` is a piece of PHP-based tool designed to perform interactive inspection on figures using web browser. It can be used for other similar visual inspections without significant modification.
 
    
    
