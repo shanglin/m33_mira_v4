@@ -17,7 +17,7 @@ f.eps = paste0(dir, 'simmira.eps')
 setEPS()
 postscript(f.eps, width=width, height=height)
 
-par(mfrow=c(2,1), mar=c(2,5,3,1))
+par(mfrow=c(2,1), mar=c(2,5,3,1), tck=0.03, mgp=c(1.9,0.4,0))
 
 mid = substr(f.flc, 6, 10)
 f.mlc = paste0(mlcdir, 'OGLE-LMC-LPV-',mid,'.dat')

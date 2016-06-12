@@ -8,7 +8,7 @@ height = width/1.618
 setEPS()
 postscript(f.eps, width=width, height=height)
 f.dat = '~/Work/m33_phaseII/m33_ofiles/m33i_bright.dat'
-## dat = read.table(f.dat)
+dat = read.table(f.dat)
 mag = dat[,4]
 mag.lim.1 = 18.5
 mag.lim.2 = 20
@@ -21,7 +21,7 @@ fig3 = c(0.45,1,0,1)
 hcol1 = '#dddddd'
 hcol2 = '#5555ee'
 
-par(mar=mar1, tck=0.04, fig=fig1)
+par(mar=mar1, tck=0.04, fig=fig1, mgp=c(1.9,0.4,0))
 h = hist(mag, breaks=200, plot=F)
 x = h$mids
 y = h$counts
@@ -87,7 +87,7 @@ mi = csv[,'I']
 mi = mi[mi>9]
 mi = mi + mag.shift
 h1 = hist(mi, plot=F, breaks=20)
-par(fig=fig3, new=T, tck=-0.02, mar=mar3)
+par(fig=fig3, new=T, tck=0.02, mar=mar3)
 plot(h1, main='', yaxt='n', ylab='', col=hcol1, xlab=xlab, cex.lab=1.3, cex.axis=1.1)
 
 h2 = h1
