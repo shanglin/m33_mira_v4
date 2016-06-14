@@ -1,5 +1,5 @@
 outdir = '~/Work/m33_phaseII/draft/v1/tables/'
-f.dat = paste0(outdir, 'foo.dat')
+f.dat = paste0(outdir, 'pars.dat')
 dat = read.table(f.dat, stringsAsFactors=F)
 idx = order(dat[,2])
 dat = dat[idx,]
