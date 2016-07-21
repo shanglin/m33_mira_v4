@@ -1,0 +1,5 @@
+all:
+	g++ gpmodelv2.cpp -o gpmodelv2 -Wall -O2 -std=c++11 -larmadillo
+
+clean:
+	rm -f gpmodelv2
