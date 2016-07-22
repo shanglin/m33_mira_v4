@@ -656,8 +656,8 @@ int main(int argc, char* argv[ ]) {
   vec all_freqs, freqs_lp;
 
   
-  if (argc > 2) {
-    string f_lc = argv[1], strperiod = argv[2];
+  if (argc > 3) {
+    string f_lc = argv[1], strperiod = argv[2], str_resolution = argv[3];
     string f_output, f_lc_trim, shell_command;
       
     output_dir = rm_last_if_slash(output_dir);
@@ -666,14 +666,15 @@ int main(int argc, char* argv[ ]) {
     system(ts_command);
 
     double p_in = stof(strperiod);
-    double p1 = p_in + 5.;
-    double p2 = p_in - 5.;
-    double lp_resolution = 1; // in days
-    int n_freqs_lp;
+    double lp_resolution = stof(str_resolution); // in days
+
+    int n_freqs_lp = 40;
+    double p1 = p_in + lp_resolution * n_freqs_lp/2;
+    double p2 = p_in - lp_resolution * n_freqs_lp/2;
     n_freqs_lp = int((p1 - p2) / lp_resolution);
     all_freqs = vec(n_freqs_lp);
     for (int i = 0; i < n_freqs_lp; i++) {
-      all_freqs(i) = 1./(p2 - double(i) * lp_resolution);
+      all_freqs(i) = 1./(p1 - double(i) * lp_resolution);
     }
     all_freqs = unique(all_freqs);
     
