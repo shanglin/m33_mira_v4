@@ -1,3 +1,7 @@
+## This page is for personal record
+
+<!---
+
 # The M33 SURVEY: II. Mira Variables
 
 ### This repository contains the codes for the Mira search project using *I* - band observations.
@@ -19,5 +23,5 @@ _________________________
 - ```mira_cata_sampsize``` studies the classification results. 
    - ```vis_inspect_source``` is a piece of PHP-based tool designed to perform interactive inspection on figures using web browser. It can be used for other similar visual inspections without significant modification.
 
-   
+-->
    
